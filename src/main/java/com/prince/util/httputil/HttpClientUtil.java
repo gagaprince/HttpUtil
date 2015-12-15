@@ -10,6 +10,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by gagaprince on 15-12-12.
@@ -78,6 +79,20 @@ public class HttpClientUtil {
         return html;
     }
 
+    public InputStream getInputStream(CloseableHttpResponse response){
+        InputStream in=null;
+        int status = response.getStatusLine().getStatusCode();
+        if(status==200){
+            HttpEntity entity = response.getEntity();
+            try {
+                in = entity.getContent();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return in;
+    }
+
     public void closeResponse(CloseableHttpResponse response){
         try {
             response.close();
@@ -85,5 +100,7 @@ public class HttpClientUtil {
             e.printStackTrace();
         }
     }
+
+
 
 }
