@@ -1,9 +1,12 @@
 package com.prince.util.httputil;
 
 import com.prince.util.fileutil.FileUtil;
+import com.prince.util.ossutil.OSSUtil;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -31,7 +34,7 @@ public class HttpUtil {
     public String getContentByUrl(String url,String charset){
         HttpGet get = httpClientUtil.giveMeHttpGet(url);
         CloseableHttpResponse response = httpClientUtil.giveMeResponse(get);
-        String content = httpClientUtil.getHtml(response,charset);
+        String content = httpClientUtil.getHtml(response, charset);
         httpClientUtil.closeResponse(response);
         return content;
     }
@@ -46,6 +49,35 @@ public class HttpUtil {
         fileUtil.saveInputStreamInFile(in,path);
 
         httpClientUtil.closeResponse(response);
+    }
+
+    public String uploadImgToOss(String url,String bucketName,String root){
+        OSSUtil ossUtil = OSSUtil.getInstance();
+        HttpEntity entity = getEntityByUrl(url);
+        try {
+            String key = root+changePath(url);
+            InputStream in = entity.getContent();
+            long length = entity.getContentLength();
+            ossUtil.uploadFile(bucketName,key,in,length);
+            in.close();
+            return ossUtil.getRootUrl(bucketName)+key;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    private String changePath(String url){
+        int index = url.indexOf("/",2);
+        String path = url.substring(index);
+        return path;
+    }
+
+    public HttpEntity getEntityByUrl(String url){
+        HttpGet get = httpClientUtil.giveMeHttpGet(url);
+        CloseableHttpResponse response = httpClientUtil.giveMeResponse(get);
+        return httpClientUtil.getHttpEntity(response);
     }
 
 }

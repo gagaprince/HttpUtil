@@ -93,6 +93,17 @@ public class HttpClientUtil {
         return in;
     }
 
+    public HttpEntity getHttpEntity(CloseableHttpResponse response){
+        InputStream in=null;
+        int status = response.getStatusLine().getStatusCode();
+        if(status==200){
+            HttpEntity entity = response.getEntity();
+            return entity;
+        }
+        return null;
+
+    }
+
     public void closeResponse(CloseableHttpResponse response){
         try {
             response.close();

@@ -31,6 +31,12 @@
       <artifactId>fileUtil</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>com.prince.util</groupId>
+      <artifactId>ossUtil</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
 
   </dependencies>
 </project>
