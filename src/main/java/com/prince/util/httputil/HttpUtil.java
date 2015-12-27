@@ -54,22 +54,32 @@ public class HttpUtil {
     public String uploadImgToOss(String url,String bucketName,String root){
         OSSUtil ossUtil = OSSUtil.getInstance();
         HttpEntity entity = getEntityByUrl(url);
+        InputStream in = null;
         try {
             String key = root+changePath(url);
-            InputStream in = entity.getContent();
+            in = entity.getContent();
             long length = entity.getContentLength();
             ossUtil.uploadFile(bucketName,key,in,length);
             in.close();
             return ossUtil.getRootUrl(bucketName)+key;
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            if (null!=in){
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
         return null;
 
     }
 
     private String changePath(String url){
-        int index = url.indexOf("/",2);
+        int index = url.indexOf("/",7);
         String path = url.substring(index);
         return path;
     }

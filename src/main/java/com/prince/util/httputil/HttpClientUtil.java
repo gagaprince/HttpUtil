@@ -100,6 +100,7 @@ public class HttpClientUtil {
             HttpEntity entity = response.getEntity();
             return entity;
         }
+        closeResponse(response);
         return null;
 
     }
