@@ -2,6 +2,7 @@ package com.prince.util.httputil;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -17,6 +18,7 @@ import java.io.InputStream;
  */
 public class HttpClientUtil {
     private CloseableHttpClient httpClient;
+//    private CloseableHttpClient httpClientUa;
 
     private static HttpClientUtil httpClientUtil;
     private HttpClientUtil(){
@@ -56,6 +58,13 @@ public class HttpClientUtil {
         }
         return response;
     }
+
+    /*public CloseableHttpResponse giveMeResponse(HttpRequestBase method,String ua){
+        if(httpClientUa==null ||){
+            httpClientUa = HttpClients.custom().setUserAgent(ua).build();
+            httpClientUa
+        }
+    }*/
 
     public String getHtml(CloseableHttpResponse response){
         return getHtml(response,"utf-8");

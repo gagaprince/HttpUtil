@@ -1,6 +1,7 @@
 package com.prince.util.httputil;
 
 import com.prince.util.fileutil.FileUtil;
+import com.prince.util.httputil.bean.HttpConfig;
 import com.prince.util.ossutil.OSSUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -38,6 +39,23 @@ public class HttpUtil {
         httpClientUtil.closeResponse(response);
         return content;
     }
+
+    public String getContentByUrlAndConfig(String url,HttpConfig httpConfig){
+        HttpGet get = httpClientUtil.giveMeHttpGet(url);
+        get.setHeader("User-Agent",httpConfig.getUa());
+        get.setHeader("Referer",httpConfig.getRefer());
+        get.setHeader("Accept",httpConfig.getAccept());
+        get.setHeader("Accept-Encoding",httpConfig.getAcceptEncoding());
+        get.setHeader("Accept-Language",httpConfig.getAcceptLanguage());
+        get.setHeader("Cache-Control",httpConfig.getCacheControl());
+        get.setHeader("Proxy-Connection",httpConfig.getProxyConnection());
+
+        CloseableHttpResponse response = httpClientUtil.giveMeResponse(get);
+        String content = httpClientUtil.getHtml(response, httpConfig.getCharset());
+        httpClientUtil.closeResponse(response);
+        return content;
+    }
+
 
     //图片网络地址 和磁盘存储地址
     public void saveImgByUrl(String url,String path){
@@ -79,7 +97,7 @@ public class HttpUtil {
     }
 
     private String changePath(String url){
-        int index = url.indexOf("/",7);
+        int index = url.indexOf("/", 7);
         String path = url.substring(index);
         return path;
     }
